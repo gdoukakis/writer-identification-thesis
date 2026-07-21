@@ -67,15 +67,32 @@ Expected protocol:
     │   ├── SNAPSHOT_STATUS.md
     │   ├── SHA256SUMS.txt
     │   ├── requirements_phase1.txt
+    │   ├── .gitignore
     │   ├── manifests/
+    │   │   ├── manifest_train_1182.csv
+    │   │   └── manifest_test_3600.csv
     │   ├── results/
+    │   │   └── phase1_reference_metrics.json
     │   └── src/
+    │       ├── evaluation.py
+    │       ├── icdar2017_srs_lbp_binarized_10022026.py
+    │       ├── pca_and_normalize.py
+    │       └── srs_lbp.py
     └── phase2_christlein2017/
-        ├── README_PHASE2.md
+        ├── README.md
+        ├── SNAPSHOT_STATUS.md
+        ├── SHA256SUMS.txt
         ├── requirements_phase2.txt
+        ├── .gitignore
         ├── configs/
-        ├── src/
-        └── scripts/
+        │   └── phase2_strict_rsift_random500k.example.yaml
+        ├── manifests/
+        │   ├── manifest_train_1182.csv
+        │   └── manifest_test_3600.csv
+        ├── scripts/
+        │   └── christlein2017_faithful/
+        └── src/
+            └── christlein2017_faithful/
 
 ## Notes
 
