@@ -6,7 +6,7 @@ This folder contains the Phase 1 implementation developed for the MSc thesis **W
 
 Phase 1 implements a handcrafted writer-identification baseline based on Sparse Radial Sampling Local Binary Patterns (SRS-LBP), PCA-based dimensionality reduction and retrieval-based evaluation on the ICDAR2017 Historical-WI dataset.
 
-This folder corresponds to the locked Phase 1 presentation snapshot. See `SNAPSHOT_STATUS.md` for the snapshot status and `results/phase1_reference_metrics.json` for the recorded reference metrics.
+This folder corresponds to the locked Phase 1 presentation snapshot. See `SNAPSHOT_STATUS.md` for the snapshot status and `results/phase1_run_summary.txt` for the recorded reference metrics.
 
 ## Final configuration
 
@@ -32,7 +32,7 @@ This folder corresponds to the locked Phase 1 presentation snapshot. See `SNAPSH
 
 | Method | Top-1 | mAP |
 |---|---:|---:|
-| SRS-LBP + PCA | 74.14% | 42.08% |
+| SRS-LBP + PCA | 74.14% | 52.57% |
 
 ## Repository structure
 
