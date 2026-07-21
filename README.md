@@ -6,17 +6,23 @@ The thesis includes two main experimental phases:
 
 ## Phase 1 - SRS-LBP Baseline
 
-This phase implements a handcrafted writer-identification baseline based on SRS-LBP features and PCA-based retrieval.
+This phase contains the handcrafted baseline used in the thesis. It implements SRS-LBP feature extraction, PCA-based dimensionality reduction and retrieval-based writer identification on the ICDAR2017 Historical-WI dataset.
 
 Folder:
 
     phase1_srs_lbp/
 
-The Phase 1 code, manifests, reference metrics and dependencies are included in this folder.
+Accepted thesis results:
 
-## Phase 2 - Christlein-faithful Pipeline
+| Method | Top-1 | mAP |
+|---|---:|---:|
+| SRS-LBP + PCA | 74.14% | 42.08% |
 
-This phase contains the final accepted deep local-feature pipeline, implemented as a faithful re-implementation of the Christlein et al. (2017) writer identification pipeline.
+The Phase 1 folder includes the source code, manifests, reference metrics, snapshot information and dependencies required to reproduce the baseline.
+
+## Phase 2 - Christlein et al. Pipeline Re-implementation
+
+This phase contains the final accepted deep local-feature pipeline. It is implemented as a re-implementation of the Christlein et al. (2017) writer identification pipeline.
 
 Folder:
 
@@ -29,9 +35,20 @@ Accepted thesis results:
 | Direct cosine retrieval | 86.69% | 70.28% |
 | Exact E-SVM-FE | 87.47% | 71.70% |
 
+The Phase 2 folder includes the source code, scripts, configuration example, dependencies and running instructions for the final accepted pipeline.
+
 ## Dataset
 
-The ICDAR2017 Historical-WI dataset is not included in this repository.
+The Historical-WI images are not included in this repository.
+
+The ICDAR2017 Historical-WI dataset can be downloaded from Zenodo:
+
+    https://zenodo.org/records/1324999
+
+The user must provide the local directories containing:
+
+- the 1,182 binarised TRAIN pages
+- the 3,600 binarised TEST pages
 
 Expected protocol:
 
@@ -42,13 +59,17 @@ Expected protocol:
 
 ## Repository structure
 
-    Repository structure
-
     writer-identification-thesis/
     ├── README.md
     ├── .gitignore
     ├── phase1_srs_lbp/
-    │   └── README_PHASE1.md
+    │   ├── README.md
+    │   ├── SNAPSHOT_STATUS.md
+    │   ├── SHA256SUMS.txt
+    │   ├── requirements_phase1.txt
+    │   ├── manifests/
+    │   ├── results/
+    │   └── src/
     └── phase2_christlein2017/
         ├── README_PHASE2.md
         ├── requirements_phase2.txt
@@ -60,5 +81,4 @@ Expected protocol:
 
 This repository does not include datasets, extracted descriptors, extracted patches, trained checkpoints, intermediate outputs, logs, or result artefacts.
 
-The Phase 2 implementation should be described as a strict Christlein-faithful re-implementation of the published methodology, but not as a bitwise or source-code-level reproduction of the original author implementation.
-
+The Phase 2 implementation should be described as a strict re-implementation of the published methodology of Christlein et al., but not as a bitwise or source-code-level reproduction of the original author implementation.
