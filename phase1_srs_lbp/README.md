@@ -46,7 +46,7 @@ This folder corresponds to the locked Phase 1 presentation snapshot. See `SNAPSH
     │   ├── manifest_train_1182.csv
     │   └── manifest_test_3600.csv
     ├── results/
-    │   └── phase1_reference_metrics.json
+    │   └── phase1_run_summary.txt
     └── src/
         ├── evaluation.py
         ├── icdar2017_srs_lbp_binarized_10022026.py
