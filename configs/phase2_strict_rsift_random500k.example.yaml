@@ -1,0 +1,75 @@
+branch: strict_christlein2017_rsift_random500k
+
+paths:
+  dataset_root: datasets/ScriptNet-HistoricalWI-2017-binarized
+  output_root: outputs/faithful_christlein2017/strict_christlein2017_rsift_random500k
+
+dataset:
+  name: ICDAR2017_Historical_WI
+  train_images: 1182
+  train_writers: 394
+  test_images: 3600
+  test_writers: 720
+  test_pages_per_writer: 5
+  protocol: TEST-only leave-one-image-out retrieval
+  self_match: exclude
+
+stage01_rsift_rootsift:
+  patch_size: 32
+  descriptor: RootSIFT
+  note: OpenCV SIFT detections followed by boundary, ink-content, and duplicate-location filtering; described as R-SIFT-like.
+
+stage02_rootsift_pca_kmeans:
+  rootsift_dim: 128
+  pca_dim: 32
+  pca_whiten: true
+  sample_source: TRAIN only
+  sample_size: 500000
+  sample_strategy: global random TRAIN descriptors
+  kmeans_clusters: 5000
+
+stage03_surrogate_dataset:
+  ratio_threshold: 0.9
+  accepted_train_descriptors: 3042355
+
+stage04_resnet20:
+  architecture: ResNet-20
+  input_size: 32
+  surrogate_classes: 5000
+  embedding_dim: 64
+  train_samples: 3022355
+  validation_samples: 20000
+  best_epoch: 22
+  max_epochs: 50
+  batch_size: 128
+
+stage06_mvlad:
+  local_embedding_dim: 64
+  num_codebooks: 5
+  centres_per_codebook: 64
+  train_embeddings_per_codebook: 500000
+  raw_dimension: 20480
+  normalisation: global signed square-root followed by global L2
+
+stage06_pca640:
+  input_dim: 20480
+  output_dim: 640
+  pca_whiten: true
+  fit_source: TRAIN only
+  final_l2: true
+
+stage07_esvm_fe:
+  classifier: LinearSVC
+  selected_c: 3.0
+  c_grid: [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0, 3.0, 10.0]
+  positives: single TEST page descriptor
+  negatives: TRAIN page descriptors
+  output_feature: L2-normalised SVM coefficient vector
+
+accepted_results:
+  direct_cosine:
+    top1_percent: 86.69
+    map_percent: 70.28
+  exact_esvm_fe:
+    top1_percent: 87.47
+    map_percent: 71.70

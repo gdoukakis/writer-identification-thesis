@@ -1,0 +1,20 @@
+numpy==2.2.6
+scipy==1.15.3
+scikit-learn==1.7.2
+pandas==2.3.3
+joblib==1.5.3
+tqdm==4.67.3
+Pillow==12.1.1
+matplotlib==3.10.8
+psutil==7.2.2
+threadpoolctl==3.6.0
+packaging==25.0
+
+# Choose one OpenCV package depending on the target environment.
+opencv-python
+
+# Install PyTorch separately according to the target CUDA setup.
+# Thesis environment used:
+# torch==2.10.0+cu128
+# torchvision==0.25.0+cu128
+# torchaudio==2.10.0+cu128
