@@ -40,7 +40,8 @@ This folder corresponds to the locked Phase 1 presentation snapshot. See `SNAPSH
     ├── README.md
     ├── SNAPSHOT_STATUS.md
     ├── SHA256SUMS.txt
-    ├── requirements_phase1.txt
+    ├── requirements_phase2.txt
+    ├── .gitignore
     ├── manifests/
     │   ├── manifest_train_1182.csv
     │   └── manifest_test_3600.csv
