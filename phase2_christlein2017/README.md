@@ -46,10 +46,16 @@ The final branch used in the thesis is:
 ## Repository structure
 
     phase2_christlein2017/
-    ├── README_PHASE2.md
+    ├── README.md
+    ├── SNAPSHOT_STATUS.md
+    ├── SHA256SUMS.txt
     ├── requirements_phase2.txt
+    ├── .gitignore
     ├── configs/
     │   └── phase2_strict_rsift_random500k.example.yaml
+    ├── manifests/
+    │   ├── manifest_train_1182.csv
+    │   └── manifest_test_3600.csv
     ├── scripts/
     │   └── christlein2017_faithful/
     │       ├── 04r_resnet20_full_surrogate_training_rsift_random500k.py
@@ -64,6 +70,7 @@ The final branch used in the thesis is:
             ├── 01r_extract_rsift_rootsift_patches.py
             ├── 02r_fit_rsift_pca_kmeans_random500k.py
             ├── 03r_build_surrogate_patch_dataset_rsift_random500k.py
+            ├── __init__.py
             ├── config.py
             ├── datasets.py
             ├── esvm_fe.py
