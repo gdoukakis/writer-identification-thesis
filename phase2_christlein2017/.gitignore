@@ -1,0 +1,24 @@
+# Generated data and outputs
+outputs/
+logs/
+checkpoints/
+
+# Large intermediate artefacts
+*.npy
+*.npz
+*.pt
+*.pth
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.ipynb_checkpoints/
