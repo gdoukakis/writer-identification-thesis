@@ -1,118 +1,90 @@
 from __future__ import annotations
 
-import numpy as np
 from dataclasses import dataclass
-from typing import Optional, Tuple
+
+import numpy as np
 
 
-def pairwise_squared_euclidean(X: np.ndarray, Y: Optional[np.ndarray] = None) -> np.ndarray:
-    """
-    Compute squared Euclidean distance matrix.
-
-    If Y is None, computes distances within X (N x N).
-    Otherwise computes distances between X (N x D) and Y (M x D): (N x M).
-    """
-    if Y is None:
-        Y = X
-    X = X.astype(np.float32, copy=False)
-    Y = Y.astype(np.float32, copy=False)
-
-    XX = np.sum(X * X, axis=1, keepdims=True)          # (N, 1)
-    YY = np.sum(Y * Y, axis=1, keepdims=True).T        # (1, M)
-    D = XX + YY - 2.0 * (X @ Y.T)                      # (N, M)
-    return np.maximum(D, 0.0)
-
-
-def average_precision(sorted_relevances: np.ndarray) -> float:
-    """
-    Compute AP given a binary relevance array ordered by ranking (1=relevant, 0=not).
-    """
-    rel = sorted_relevances.astype(np.int32, copy=False)
-    n_rel = int(rel.sum())
-    if n_rel == 0:
-        return 0.0
-
-    cumsum = np.cumsum(rel)
-    precision_at_k = cumsum / (np.arange(rel.size) + 1.0)
-    ap = float((precision_at_k * rel).sum() / n_rel)
-    return ap
-
-
-@dataclass
+@dataclass(frozen=True)
 class RetrievalMetrics:
     top1: float
     mAP: float
 
 
-def top1_accuracy_cross_set(D_qg: np.ndarray, yQ: np.ndarray, yG: np.ndarray) -> float:
-    """
-    Top-1 retrieval accuracy for cross-set retrieval (queries vs gallery).
-
-    For each query i, pick nearest gallery sample and compare writer labels.
-    """
-    nn = np.argmin(D_qg, axis=1)
-    correct = (yG[nn] == yQ).astype(np.float32)
-    return float(correct.mean())
+def pairwise_squared_euclidean(x: np.ndarray) -> np.ndarray:
+    """Return the within-set squared Euclidean distance matrix."""
+    x = np.asarray(x, dtype=np.float64)
+    squared_norms = np.sum(x * x, axis=1, keepdims=True)
+    distances = squared_norms + squared_norms.T - 2.0 * (x @ x.T)
+    return np.maximum(distances, 0.0)
 
 
-def mean_average_precision_cross_set(D_qg: np.ndarray, yQ: np.ndarray, yG: np.ndarray) -> float:
-    """
-    mAP for cross-set retrieval (queries vs gallery).
+def average_precision(relevances: np.ndarray) -> float:
+    """Calculate AP from the relevance values of the final gallery ranking."""
+    relevances = np.asarray(relevances, dtype=np.int64)
+    number_relevant = int(relevances.sum())
+    if number_relevant == 0:
+        return 0.0
 
-    For each query i:
-      - rank all gallery samples by ascending distance
-      - relevant = same writer label in the gallery
-      - compute AP over ranked list
-    """
-    aps = []
-    for i in range(D_qg.shape[0]):
-        order = np.argsort(D_qg[i], kind="mergesort")
-        rel = (yG[order] == yQ[i]).astype(np.int32)
-        aps.append(average_precision(rel))
-    return float(np.mean(aps))
+    cumulative_relevant = np.cumsum(relevances)
+    precision_at_rank = cumulative_relevant / np.arange(
+        1, relevances.size + 1
+    )
+    return float(
+        np.sum(precision_at_rank * relevances) / number_relevant
+    )
 
 
-# Cross-set retrieval evaluation (NOT used in Phase 1 ICDAR2017 run,
-# but kept for completeness and future experiments).
-def evaluate_retrieval(
-    Q: np.ndarray,
-    yQ: np.ndarray,
-    G: np.ndarray,
-    yG: np.ndarray,
+def evaluate_retrieval_within_set(
+    descriptors: np.ndarray,
+    writer_ids: np.ndarray,
 ) -> RetrievalMetrics:
     """
-    Evaluate retrieval metrics for cross-set protocol: queries(Q) against gallery(G).
+    Evaluate leave-one-image-out retrieval.
+
+    The query index is removed completely from its gallery before Top-1 and AP
+    are calculated.
     """
-    yQ = np.asarray(yQ)
-    yG = np.asarray(yG)
+    descriptors = np.asarray(descriptors, dtype=np.float32)
+    writer_ids = np.asarray(writer_ids)
 
-    D = pairwise_squared_euclidean(Q, G)  # (nQ, nG)
-    top1 = top1_accuracy_cross_set(D, yQ, yG)
-    mAP = mean_average_precision_cross_set(D, yQ, yG)
-    return RetrievalMetrics(top1=top1, mAP=mAP)
+    if descriptors.ndim != 2:
+        raise ValueError(
+            "descriptors must have shape (n_samples, n_features)."
+        )
+    if writer_ids.ndim != 1:
+        raise ValueError("writer_ids must be one-dimensional.")
+    if descriptors.shape[0] != writer_ids.shape[0]:
+        raise ValueError(
+            "descriptors and writer_ids must contain the same samples."
+        )
 
+    distances = pairwise_squared_euclidean(descriptors)
+    all_indices = np.arange(descriptors.shape[0])
 
-# Optional: keep within-set evaluation for sanity checks / debugging
-def evaluate_retrieval_within_set(X: np.ndarray, y: np.ndarray) -> RetrievalMetrics:
-    """
-    Evaluate retrieval within the same set (query=gallery) excluding self-match.
-    Useful only for debugging; NOT the ICDAR2017 protocol we need.
-    """
-    y = np.asarray(y)
-    D = pairwise_squared_euclidean(X)
+    top1_correct = np.empty(descriptors.shape[0], dtype=np.float64)
+    average_precisions = np.empty(
+        descriptors.shape[0],
+        dtype=np.float64,
+    )
 
-    # Exclude self
-    D2 = D.copy()
-    np.fill_diagonal(D2, np.inf)
+    for query_index in range(descriptors.shape[0]):
+        gallery_mask = all_indices != query_index
+        gallery_indices = all_indices[gallery_mask]
 
-    nn = np.argmin(D2, axis=1)
-    top1 = float((y[nn] == y).astype(np.float32).mean())
+        order = np.argsort(
+            distances[query_index, gallery_mask],
+            kind="mergesort",
+        )
+        ranked_indices = gallery_indices[order]
+        relevant = (
+            writer_ids[ranked_indices] == writer_ids[query_index]
+        )
 
-    aps = []
-    for i in range(D2.shape[0]):
-        order = np.argsort(D2[i], kind="mergesort")
-        rel = (y[order] == y[i]).astype(np.int32)
-        aps.append(average_precision(rel))
-    mAP = float(np.mean(aps))
+        top1_correct[query_index] = float(relevant[0])
+        average_precisions[query_index] = average_precision(relevant)
 
-    return RetrievalMetrics(top1=top1, mAP=mAP)
+    return RetrievalMetrics(
+        top1=float(top1_correct.mean()),
+        mAP=float(average_precisions.mean()),
+    )
