@@ -16,7 +16,7 @@ Accepted thesis results:
 
 | Method | Top-1 | mAP |
 |---|---:|---:|
-| SRS-LBP + PCA | 74.14% | 42.08% |
+| SRS-LBP + PCA | 74.14% | 52.57% |
 
 The Phase 1 folder includes the source code, manifests, reference metrics, snapshot information and dependencies required to reproduce the baseline.
 
