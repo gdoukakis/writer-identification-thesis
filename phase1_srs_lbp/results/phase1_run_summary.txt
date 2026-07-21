@@ -1,0 +1,55 @@
+Phase 1 — Barcelona / CVC SRS-LBP (ICDAR2017 Historical-WI)
+Protocol: PCA fit on TRAIN (1182), retrieval WITHIN-TEST on TEST (3600), exclude self-match
+Note: TRAIN/TEST writers are disjoint => TEST->TRAIN retrieval has no positives (overlap=0).
+
+=== Config ===
+train_manifest: manifests/manifest_train_1182.csv
+test_manifest: manifests/manifest_test_3600.csv
+train_base_dir: <LOCAL_DATASET_ROOT>/training-binarized
+test_base_dir: <LOCAL_DATASET_ROOT>/test-binarized
+discard_zero_mode: keep_256_zeroed
+radii: 1..12
+points: 8
+valid_border: True
+l1_normalize_blocks: True
+pca_n_components: 200
+pca_whiten: False
+power_mode: signed_sqrt
+l2_normalize: True
+distance: squared_euclidean
+n_jobs: 4
+batch_size: 1
+save_npys: True
+evaluation_mode: within_test
+train_test_writer_overlap: 0
+
+=== Dataset ===
+train_num_images: 1182
+train_num_writers: 394
+train_images_per_writer_min: 3
+train_images_per_writer_max: 3
+test_num_images: 3600
+test_num_writers: 720
+test_images_per_writer_min: 5
+test_images_per_writer_max: 5
+
+Execution mode: cached descriptors loaded; feature extraction was not repeated.
+Note: The reported timings describe the final PCA and evaluation rerun, not a full pipeline execution.
+=== Timings (sec) ===
+feature_extraction_train: 0.0198
+feature_extraction_test: 0.0445
+pca_fit_transform_total: 0.4293
+retrieval_eval: 2.3494
+total: 2.9285
+
+=== PCA Stats ===
+n_components: 200
+input_dim: 3072
+whiten: False
+random_state: 0
+explained_variance_ratio_first10: [0.38300782442092896, 0.23162299394607544, 0.12596526741981506, 0.047345999628305435, 0.0392489954829216, 0.02607738971710205, 0.017888465896248817, 0.01727198250591755, 0.0126680638641119, 0.010302593000233173]
+explained_variance_ratio_sum: 0.9978659152984619
+
+=== Metrics (WITHIN-TEST) ===
+Top-1 accuracy: 0.741389
+mAP:           0.525698
