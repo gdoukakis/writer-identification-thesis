@@ -12,7 +12,7 @@ Folder:
 
     phase1_srs_lbp/
 
-The Phase 1 code will be added in this folder.
+The Phase 1 code, manifests, reference metrics and dependencies are included in this folder.
 
 ## Phase 2 - Christlein-faithful Pipeline
 

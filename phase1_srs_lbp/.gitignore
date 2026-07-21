@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Generated Phase 1 outputs
+*.npy
+phase1_run_log.json
+phase1_run_summary.txt
+outputs/
+results/generated/
