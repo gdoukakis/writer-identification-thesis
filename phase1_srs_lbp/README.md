@@ -151,7 +151,7 @@ The script generates intermediate descriptors, transformed features and result s
 
 These generated files are not included in the GitHub repository.
 
-## Precomputed Phase 1 artifacts
+## Precomputed artifacts
 
 The precomputed SRS-LBP descriptors and final PCA embeddings are available as a GitHub Release:
 
