@@ -151,6 +151,16 @@ The script generates intermediate descriptors, transformed features and result s
 
 These generated files are not included in the GitHub repository.
 
+## Precomputed Phase 1 artifacts
+
+The precomputed SRS-LBP descriptors and final PCA embeddings are available as a GitHub Release:
+
+Download the Phase 1 evaluation artifacts:
+
+https://github.com/gdoukakis/writer-identification-thesis/releases/tag/phase1-evaluation
+
+The artifacts allow the final Top-1 and mAP results to be evaluated without repeating the time-consuming SRS-LBP feature extraction.
+
 ## Notes
 
 This folder contains code and lightweight metadata only. It does not include Historical-WI images, extracted descriptors, transformed features or generated runtime outputs.
