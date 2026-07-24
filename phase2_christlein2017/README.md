@@ -67,6 +67,7 @@ The final branch used in the thesis is:
     │       └── 07r_exact_esvm_fe_resnet20_rsift_random500k_pca640.py
     └── src/
         └── christlein2017_faithful/
+            ├── 00_prepare_manifests.py
             ├── 01r_extract_rsift_rootsift_patches.py
             ├── 02r_fit_rsift_pca_kmeans_random500k.py
             ├── 03r_build_surrogate_patch_dataset_rsift_random500k.py
