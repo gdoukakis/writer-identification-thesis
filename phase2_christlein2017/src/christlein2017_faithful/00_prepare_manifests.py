@@ -7,11 +7,6 @@ from typing import Dict, List
 
 import pandas as pd
 
-
-# Public/GitHub-safe default root.
-# Expected location:
-# phase2_christlein2017/src/christlein2017_faithful/00_prepare_manifests.py
-# Therefore parents[2] resolves to phase2_christlein2017.
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 SOURCE_MANIFESTS_DIR = PROJECT_ROOT / "manifests"
